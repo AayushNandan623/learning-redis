@@ -2,6 +2,9 @@ import client from "./client.js";
 async function settingNew(key, value) {
   await client.set(`user:${key}`, `${value}`);
 }
+async function settingExpire(key, time) {
+  await client.expire(`user:${key}`, time);
+}
 async function settingNewOnlyOnce(key, value) {
   await client.setnx(`user:${key}`, `${value}`);
 }
@@ -17,3 +20,12 @@ settingNewOnlyOnce(2, "Xyz");
 getValue(2);
 settingNewOnlyOnce(2, "qwerty");
 getValue(2);
+settingExpire(2, 10);
+let count = 0;
+const constCheck = setInterval(() => {
+  if (count > 12) {
+    clearInterval(constCheck);
+  }
+  getValue(2);
+  count++;
+}, 1000);
